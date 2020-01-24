@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="\Magento\Backend\Model\Session\Quote">
+        <plugin name="bee_cq_get_previous_quote_if_available" type="\BeeBots\AdminCustomerQuote\Plugin\GetPreviousQuoteIfAvailable" />
+    </type>
+</config>
