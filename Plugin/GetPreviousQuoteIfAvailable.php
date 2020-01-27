@@ -23,6 +23,9 @@ class GetPreviousQuoteIfAvailable
     /** @var Quote */
     private $quote;
 
+    /** @var bool */
+    private $quoteIdAlreadyInitialized = false;
+
     /**
      * GetPreviousQuoteIfAvailable constructor.
      *
@@ -41,6 +44,10 @@ class GetPreviousQuoteIfAvailable
      */
     public function beforeGetQuote(Quote $quote)
     {
+        if ($this->quoteIdAlreadyInitialized) {
+            return;
+        }
+        $this->quoteIdAlreadyInitialized = true;
         // set latest quote id on session if customer and quote available
         $customerId = $quote->getCustomerId();
         if (! $customerId) {

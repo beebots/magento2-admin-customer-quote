@@ -66,16 +66,18 @@ class GetPreviousQuoteIfAvailableTest extends TestCase
         $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
     }
 
-//    public function testDoNothingIfSessionObjectAlreadyHasQuoteId()
-//    {
-//        $this->quoteSubjectMock->shouldReceive('getQuoteId')
-//            ->andReturn(101011);
-//        $this->quoteSubjectMock->shouldReceive('getCustomerId')
-//            ->andReturn(101011);
-//        $this->customerQuoteResourceMock->shouldNotReceive('getLatestQuoteIdOrNullForCustomer');
-//        $this->quoteSubjectMock->shouldNotReceive('setQuoteId');
-//        $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
-//    }
+    public function testDoNothingIfCalledSecondTime()
+    {
+        $this->quoteSubjectMock->shouldReceive('getCustomerId')
+            ->andReturn(101011)
+            ->once();
+        $this->customerQuoteResourceMock->shouldNotReceive('getLatestQuoteIdOrNullForCustomer');
+        $this->customerQuoteResourceMock->shouldReceive('getLatestQuoteIdOrNullForCustomer')
+            ->andReturn(null);
+        $this->quoteSubjectMock->shouldNotReceive('setQuoteId');
+        $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
+        $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
+    }
 
     public function testDoNothingIfNoCustomerId()
     {
