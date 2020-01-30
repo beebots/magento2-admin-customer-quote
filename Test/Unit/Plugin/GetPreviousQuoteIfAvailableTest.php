@@ -42,7 +42,8 @@ class GetPreviousQuoteIfAvailableTest extends TestCase
 
     public function testSetSessionQuoteIfPreviousQuoteAvailableForCustomer()
     {
-        $this->quoteSubjectMock->shouldReceive('getQuoteId')
+        $this->quoteSubjectMock->shouldReceive('getData')
+            ->withArgs(['reordered'])
             ->andReturn(null);
         $this->quoteSubjectMock->shouldReceive('getCustomerId')
             ->andReturn(101011);
@@ -56,7 +57,8 @@ class GetPreviousQuoteIfAvailableTest extends TestCase
 
     public function testDoNothingWhenPreviousQuoteNotAvailable()
     {
-        $this->quoteSubjectMock->shouldReceive('getQuoteId')
+        $this->quoteSubjectMock->shouldReceive('getData')
+            ->withArgs(['reordered'])
             ->andReturn(null);
         $this->quoteSubjectMock->shouldReceive('getCustomerId')
             ->andReturn(101011);
@@ -66,8 +68,21 @@ class GetPreviousQuoteIfAvailableTest extends TestCase
         $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
     }
 
+    public function testDoNothingWhenOrderIsBeingReordered()
+    {
+        $this->quoteSubjectMock->shouldReceive('getData')
+            ->withArgs(['reordered'])
+            ->andReturn('101011');
+        $this->quoteSubjectMock->shouldNotReceive('getCustomerId');
+        $this->quoteSubjectMock->shouldNotReceive('setQuoteId');
+        $this->getPreviousQuoteIfAvailable->beforeGetQuote($this->quoteSubjectMock);
+    }
+
     public function testDoNothingIfCalledSecondTime()
     {
+        $this->quoteSubjectMock->shouldReceive('getData')
+            ->withArgs(['reordered'])
+            ->andReturn(null);
         $this->quoteSubjectMock->shouldReceive('getCustomerId')
             ->andReturn(101011)
             ->once();
@@ -81,7 +96,8 @@ class GetPreviousQuoteIfAvailableTest extends TestCase
 
     public function testDoNothingIfNoCustomerId()
     {
-        $this->quoteSubjectMock->shouldReceive('getQuoteId')
+        $this->quoteSubjectMock->shouldReceive('getData')
+            ->withArgs(['reordered'])
             ->andReturn(null);
         $this->quoteSubjectMock->shouldReceive('getCustomerId')
             ->andReturn(null);
