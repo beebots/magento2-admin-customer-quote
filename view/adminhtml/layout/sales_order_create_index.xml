@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="content">
+            <block class="BeeBots\AdminCustomerQuote\Block\SaveAndClose" template="BeeBots_AdminCustomerQuote::save_close.phtml" after="order_content"/>
+        </referenceBlock>
+    </body>
+</page>
