@@ -3,6 +3,7 @@
     <body>
         <referenceBlock name="content">
             <block class="BeeBots\AdminCustomerQuote\Block\SaveAndClose" template="BeeBots_AdminCustomerQuote::save_close.phtml" after="order_content"/>
+            <block class="BeeBots\AdminCustomerQuote\Block\EmailQuote" template="BeeBots_AdminCustomerQuote::email_quote.phtml" after="order_content"/>
         </referenceBlock>
     </body>
 </page>

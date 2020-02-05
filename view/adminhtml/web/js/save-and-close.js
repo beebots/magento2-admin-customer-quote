@@ -1,7 +1,8 @@
 define([
     'jquery',
-    'Magento_Sales/order/create/scripts',
-], function ($) {
+    'BeeBots_AdminCustomerQuote/js/admin-order-common',
+    'Magento_Sales/order/create/scripts'
+], function ($, adminOrderCommon) {
     'use strict';
 
     return {
@@ -12,13 +13,12 @@ define([
             if (cancelUrl) {
                 this.cancelUrl = cancelUrl;
             }
-            $('#save_and_close_quote').click(this.save.bind(this));
+            $('#save_and_close_quote').click(this.onSaveAndClose.bind(this));
         },
 
-        save: function () {
-            this.startLoader();
-            let params = window.order.serializeData('edit_form');
-            let deferred = window.order.loadArea(false, false, params);
+        onSaveAndClose: function() {
+            adminOrderCommon.startLoader();
+            let deferred = adminOrderCommon.save();
             deferred.done(this.onSaveFinish.bind(this));
         },
 
@@ -27,21 +27,11 @@ define([
         },
 
         close: function () {
-            if (this.cancelUrl) {
-                window.location.href = this.cancelUrl;
-            } else {
-                $('#reset_order_top_button').click();
-            }
-        },
-
-        startLoader: function () {
-            $(window.productConfigure.blockForm).trigger('processStart');
-            return this;
-        },
-
-        stopLoader: function () {
-            $(window.productConfigure.blockForm).trigger('processStop');
-            return this;
+            // if (this.cancelUrl) {
+            //     window.location.href = this.cancelUrl;
+            // } else {
+            //     $('#reset_order_top_button').click();
+            // }
         },
     };
 });

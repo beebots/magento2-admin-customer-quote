@@ -1,0 +1,7 @@
+<?php /** @var $block BeeBots\AdminCustomerQuote\Block\EmailQuote */?>
+<script>
+    require(["BeeBots_AdminCustomerQuote/js/email-quote"],
+        function(emailQuote){
+            emailQuote.init('<?= $block->getQuoteId()?>', '<?=$block->getEmailQuoteUrl()?>');
+    });
+</script>
