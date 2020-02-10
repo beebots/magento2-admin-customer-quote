@@ -48,6 +48,12 @@
                     {{/depend}}
                 </tr>
                 <tr>
+                    {{depend quote_payment_html}}
+                    <td class="method-info">
+                        <h3>{{trans "Payment Method"}}</h3>
+                        {{var quote_payment_html|raw}}
+                    </td>
+                    {{/depend}}
                     {{depend quote_shipping_description}}
                     <td class="method-info">
                         <h3>{{trans "Shipping Method"}}</h3>
@@ -56,7 +62,6 @@
                     {{/depend}}
                 </tr>
             </table>
-            {{layout handle="sales_email_quote_items" order=$quote area="frontend"}}
         </td>
     </tr>
 </table>
