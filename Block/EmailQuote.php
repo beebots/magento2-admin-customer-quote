@@ -31,6 +31,7 @@ class EmailQuote extends Template
     public function __construct(Quote $quoteSession, Context $context, array $data = [])
     {
         parent::__construct($context, $data);
+        $this->quoteSession = $quoteSession;
         $this->buttonList = $context->getButtonList();
         $this->buttonList->add(
             'email_quote',
@@ -42,7 +43,9 @@ class EmailQuote extends Template
             0,
             'toolbar'
         );
-        $this->quoteSession = $quoteSession;
+        if (! $this->quoteSession->getCustomerId()) {
+            $this->buttonList->update('email_quote', 'style', 'display:none');
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 define([
-    'jquery'
+    'jquery',
+    'Magento_Sales/order/create/scripts',
 ], function($){
     'use strict';
 

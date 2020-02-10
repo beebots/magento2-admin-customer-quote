@@ -1,22 +1,27 @@
 define([
     'jquery',
-    'BeeBots_AdminCustomerQuote/js/admin-order-common',
-    'Magento_Sales/order/create/scripts'
-], function($, adminOrderCommon){
+    'BeeBots_AdminCustomerQuote/js/admin-order-common'
+], function ($, adminOrderCommon) {
     'use strict';
 
     return {
 
         quoteId: false,
         url: false,
+        emailQuoteButton: false,
 
-        init: function(quoteId, url) {
+        init: function (quoteId, url) {
             this.quoteId = quoteId;
             this.url = url;
-            $('#email_quote').click(this.onSendEmailClicked.bind(this));
+            this.emailQuoteButton = $('#email_quote');
+            this.emailQuoteButton.click(this.onSendEmailClicked.bind(this))
+            const $actionButtonsBar = $('#back_order_top_button').get(0);
+            const config = {attributes: true, childList: true};
+            const observer = new MutationObserver(this.onBackButtonChanged.bind(this));
+            observer.observe($actionButtonsBar, config);
         },
 
-        onSendEmailClicked: function() {
+        onSendEmailClicked: function () {
             adminOrderCommon.startLoader();
             let promise = adminOrderCommon.save();
             let afterSendQuoteEmailPromise = promise.pipe(this.sendQuoteEmail.bind(this, this.quoteId, this.url));
@@ -24,12 +29,12 @@ define([
             afterSendQuoteEmailPromise.fail(this.onEmailFail);
         },
 
-        sendQuoteEmail: function(quoteId, url) {
-            if(!quoteId){
+        sendQuoteEmail: function (quoteId, url) {
+            if (!quoteId) {
                 console.error('quote id is missing');
                 return;
             }
-            if(!url){
+            if (!url) {
                 console.error('url is required');
                 return;
             }
@@ -43,16 +48,20 @@ define([
             });
         },
 
-        onEmailSent: function(){
+        onEmailSent: function () {
             // TODO: show success message?
             console.log('finished sending email');
             adminOrderCommon.stopLoader();
         },
 
-        onEmailFail: function(){
+        onEmailFail: function () {
             // TODO: show error message?
             console.log('error sending email');
             adminOrderCommon.stopLoader();
+        },
+
+        onBackButtonChanged: function () {
+            this.emailQuoteButton.show();
         }
     };
 });

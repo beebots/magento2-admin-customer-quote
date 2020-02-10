@@ -1,19 +1,24 @@
 define([
     'jquery',
     'BeeBots_AdminCustomerQuote/js/admin-order-common',
-    'Magento_Sales/order/create/scripts'
 ], function ($, adminOrderCommon) {
     'use strict';
 
     return {
 
         cancelUrl: false,
+        saveCloseButton: false,
 
         init: function (cancelUrl) {
             if (cancelUrl) {
                 this.cancelUrl = cancelUrl;
             }
-            $('#save_and_close_quote').click(this.onSaveAndClose.bind(this));
+            this.saveCloseButton = $('#save_and_close_quote');
+            this.saveCloseButton.click(this.onSaveAndClose.bind(this));
+            const $actionButtonsBar = $('#back_order_top_button').get(0);
+            const config = {attributes: true, childList: true};
+            const observer = new MutationObserver(this.onBackButtonChanged.bind(this));
+            observer.observe($actionButtonsBar, config);
         },
 
         onSaveAndClose: function() {
@@ -33,5 +38,9 @@ define([
                 $('#reset_order_top_button').click();
             }
         },
+
+        onBackButtonChanged: function () {
+            this.saveCloseButton.show();
+        }
     };
 });
