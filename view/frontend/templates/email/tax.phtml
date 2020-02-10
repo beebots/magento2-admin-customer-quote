@@ -1,0 +1,19 @@
+<?php
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+// phpcs:disable Squiz.PHP.GlobalKeyword.NotAllowed
+?>
+<?php
+$_source = $block->getSource();
+global $taxIter;
+$taxIter++;
+?>
+
+<tr class="totals-tax">
+    <th <?= /* @noEscape */ $block->getLabelProperties() ?> scope="row">
+        <?= $block->escapeHtml(__('Tax')) ?>
+    </th>
+    <td <?= /* @noEscape */ $block->getValueProperties() ?> data-th="<?= $block->escapeHtmlAttr(__('Tax')) ?>">
+        <?= /* @noEscape */ $block->formatPrice($_source->getShippingAddress()->getTaxAmount()) ?>
+    </td>
+</tr>
