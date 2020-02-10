@@ -27,11 +27,11 @@ define([
         },
 
         close: function () {
-            // if (this.cancelUrl) {
-            //     window.location.href = this.cancelUrl;
-            // } else {
-            //     $('#reset_order_top_button').click();
-            // }
+            if (this.cancelUrl) {
+                window.location.href = this.cancelUrl;
+            } else {
+                $('#reset_order_top_button').click();
+            }
         },
     };
 });
