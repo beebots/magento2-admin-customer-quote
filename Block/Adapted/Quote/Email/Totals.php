@@ -55,7 +55,10 @@ class Totals extends OrderTotals
          * Add shipping
          */
         $shippingAddress = $source->getShippingAddress();
-        if (! $source->getIsVirtual() && $shippingAddress && (is_numeric($shippingAddress->getShippingAmount()))) {
+        if (! $source->getIsVirtual() && $shippingAddress
+            && (is_numeric($shippingAddress->getShippingAmount()))
+            && $shippingAddress->getShippingAmount() > 0
+        ) {
             $this->_totals['shipping'] = new DataObject(
                 [
                     'code' => 'shipping',
@@ -69,14 +72,16 @@ class Totals extends OrderTotals
         /**
          * Add discount
          */
-        if (is_numeric($this->getSource()->getSubtotalWithDiscount()) && (double)$this->getSource()->getSubtotalWithDscount() < (double)$this->getSource()->getSubtotal() ) {
+        if (is_numeric($this->getSource()->getSubtotalWithDiscount())
+            && (double)$this->getSource()->getSubtotalWithDiscount() < (double)$this->getSource()->getSubtotal()) {
             $discountLabel = __('Discount');
 
             $this->_totals['discount'] = new DataObject(
                 [
                     'code' => 'discount',
                     'field' => 'discount_amount',
-                    'value' => (double)$this->getSource()->getSubtotalWithDiscount() - (double)$this->getSource()->getSubtotal(),
+                    'value' => (double)$this->getSource()->getSubtotalWithDiscount() - (double)$this->getSource()
+                            ->getSubtotal(),
                     'label' => $discountLabel,
                 ]
             );
