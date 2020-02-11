@@ -35,7 +35,7 @@ define([
             if (this.cancelUrl) {
                 window.location.href = this.cancelUrl;
             } else {
-                $('#reset_order_top_button').click();
+                console.error('cancel url not set');
             }
         },
 

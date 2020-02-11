@@ -7,6 +7,7 @@ use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Widget\Button\ButtonList;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Backend\Model\Session\Quote;
+use Magento\Framework\Url\Helper\Data;
 use Magento\Sales\Block\Adminhtml\Order\Create;
 
 /**
@@ -25,14 +26,18 @@ class SaveAndClose extends Template
     /** @var Quote */
     private $quoteSession;
 
+    /** @var Data */
+    private $urlHelper;
+
     /**
      *
      * @param Quote $quoteSession
+     * @param Data $urlHelper
      * @param Context $context
      * @param Create $createBlock
      * @param array $data
      */
-    public function __construct(Quote $quoteSession, Context $context, Create $createBlock, array $data = [])
+    public function __construct(Quote $quoteSession, Data $urlHelper, Context $context, Create $createBlock, array $data = [])
     {
         parent::__construct($context, $data);
         $this->quoteSession = $quoteSession;
@@ -51,6 +56,7 @@ class SaveAndClose extends Template
             $this->buttonList->update('save_close', 'style', 'display:none');
         }
         $this->createBlock = $createBlock;
+        $this->urlHelper = $urlHelper;
     }
 
     /**
@@ -60,6 +66,7 @@ class SaveAndClose extends Template
      */
     public function getCancelUrl()
     {
-        return $this->createBlock->getCancelUrl();
+        $cancelUrl = $this->createBlock->getCancelUrl();
+        return $this->urlHelper->addRequestParam($cancelUrl, ['delete' => 'false']);
     }
 }

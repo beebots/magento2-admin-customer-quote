@@ -3,4 +3,7 @@
     <type name="\Magento\Backend\Model\Session\Quote">
         <plugin name="bee_cq_get_previous_quote_if_available" type="\BeeBots\AdminCustomerQuote\Plugin\GetPreviousQuoteIfAvailable" />
     </type>
+    <type name="\Magento\Sales\Controller\Adminhtml\Order\Create\Cancel">
+        <plugin name="bee_cq_delete_quote_if_cancel_clicked" type="\BeeBots\AdminCustomerQuote\Plugin\DeleteCanceledQuote" />
+    </type>
 </config>
