@@ -55,7 +55,7 @@ class DeleteCanceledQuote
         $quote = $this->quoteSession->getQuote();
         $result = $proceed();
         // quote may never be active, but is a precautionary check. active quotes belong to customer, so we don't want to delete those
-        if ($quote->getIsActive() === false) {
+        if ($quote->getIsActive() == false) { // getIsActive currently returning '0' (string)
             $this->quoteRepository->delete($quote);
         }
         return $result;
