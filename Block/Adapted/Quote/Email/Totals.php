@@ -55,9 +55,8 @@ class Totals extends OrderTotals
          * Add shipping
          */
         $shippingAddress = $source->getShippingAddress();
-        if (! $source->getIsVirtual() && $shippingAddress
-            && (is_numeric($shippingAddress->getShippingAmount()))
-            && $shippingAddress->getShippingAmount() > 0
+        if (! $source->getIsVirtual() && $shippingAddress && $shippingAddress->getShippingAmount() > 0
+            || (is_numeric($shippingAddress->getShippingAmount()) && $shippingAddress->getShippingDescription())
         ) {
             $this->_totals['shipping'] = new DataObject(
                 [
