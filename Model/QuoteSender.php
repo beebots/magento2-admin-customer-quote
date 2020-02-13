@@ -4,15 +4,17 @@ namespace BeeBots\AdminCustomerQuote\Model;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Magento\Customer\Model\Address\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\MailException;
 use Magento\Framework\Mail\Template\SenderResolverInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address;
-use Magento\Quote\Model\Quote\Payment;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -38,11 +40,8 @@ class QuoteSender
     /** @var SenderResolverInterface */
     private $senderResolver;
 
-    /** @var Magento\Framework\Stdlib\DateTime\TimezoneInterface */
+    /** @var TimezoneInterface */
     private $timezone;
-
-    /** @var Renderer */
-    private $addressRenderer;
 
     /** @var Config */
     private $addressConfig;
@@ -83,6 +82,10 @@ class QuoteSender
      * Function: send
      *
      * @param Quote $quote
+     *
+     * @throws MailException
+     * @throws LocalizedException
+     * @throws Exception
      */
     public function send(Quote $quote)
     {
@@ -92,39 +95,27 @@ class QuoteSender
         /** @var array $from */
         $from = $this->senderResolver->resolve(
             $this->scopeConfig->getValue(self::EMAIL_SENDER_CONFIG_PATH),
-            );
+        );
 
-        $transport = $this->transportBuilder->setTemplateIdentifier($templateId)
-            ->setTemplateOptions(['area' => 'frontend', 'store' => $quote->getStoreId()])
-            ->setTemplateVars(
-                [
-                    'quote' => $quote,
-                    'quote_updated_at' => $this->getFormattedDateFromDateTimeString($quote->getUpdatedAt()),
-                    'quote_comment' => $this->getCustomerNote($quote),
-                    'quote_show_shipping_address' => ! $quote->getIsVirtual(),
-                    'quote_shipping_address' => $this->getFormattedAddress($quote->getShippingAddress(), 'html'),
-                    'quote_billing_address' => $this->getFormattedAddress($quote->getBillingAddress(), 'html'),
-                    'quote_is_not_virtual' => ! $quote->getIsVirtual(),
-                    'quote_shipping_method' => $quote->getShippingAddress()->getShippingMethod(),
-                    'quote_shipping_description' => $quote->getShippingAddress()->getShippingDescription(),
-                    'quote_payment_html' => $this->getPaymentHtml($quote),
-                ]
-            )
-            ->setFrom($from)
-            ->addTo($email)
-            ->getTransport();
+        $templateVars = $this->getTemplateVars($quote);
 
-        $transport->sendMessage();
+        // send email to customer
+        $this->sendEmail($templateId, $quote, $templateVars, $from, $email);
+
+        // send email to customer service
+        if ($copyToEmail = $this->scopeConfig->getValue('sales_email/order/copy_to')) {
+            $this->sendEmail($templateId, $quote, $templateVars, $from, $copyToEmail);
+        }
     }
 
     /**
      * Function: getFormattedDateFromDateTimeString
      *
-     * @param $date
+     * @param string $date
      *
      * @return string
      */
-    private function getFormattedDateFromDateTimeString($date)
+    private function getFormattedDateFromDateTimeString(string $date)
     {
         $timeZone = new DateTimeZone($this->timezone->getConfigTimezone());
         return DateTime::createFromFormat('Y-m-d H:i:s', $date)->setTimezone($timeZone)->format('M jS, Y g:i:sa T');
@@ -162,6 +153,7 @@ class QuoteSender
         if (! $address->getFirstname()) {
             $address->setFirstname(' ');
         }
+        /** @noinspection PhpUndefinedMethodInspection */
         return $formatType->getRenderer()->renderArray($address->getData());
     }
 
@@ -171,7 +163,7 @@ class QuoteSender
      * @param Quote $quote
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function getPaymentHtml(Quote $quote)
     {
@@ -186,5 +178,53 @@ class QuoteSender
             }
         }
         return '';
+    }
+
+    /**
+     * Function: getTemplateVars
+     *
+     * @param Quote $quote
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function getTemplateVars(Quote $quote)
+    {
+        return [
+            'quote' => $quote,
+            'quote_updated_at' => $this->getFormattedDateFromDateTimeString($quote->getUpdatedAt()),
+            'quote_comment' => $this->getCustomerNote($quote),
+            'quote_show_shipping_address' => ! $quote->getIsVirtual(),
+            'quote_shipping_address' => $this->getFormattedAddress($quote->getShippingAddress(), 'html'),
+            'quote_billing_address' => $this->getFormattedAddress($quote->getBillingAddress(), 'html'),
+            'quote_is_not_virtual' => ! $quote->getIsVirtual(),
+            'quote_shipping_method' => $quote->getShippingAddress()->getShippingMethod(),
+            'quote_shipping_description' => $quote->getShippingAddress()->getShippingDescription(),
+            'quote_payment_html' => $this->getPaymentHtml($quote),
+        ];
+    }
+
+    /**
+     * Function: sendEmail
+     *
+     * @param string $templateId
+     * @param Quote $quote
+     * @param array $templateVars
+     * @param string $from
+     * @param string $email
+     *
+     * @throws LocalizedException
+     * @throws MailException
+     */
+    private function sendEmail(string $templateId, Quote $quote, array $templateVars, array $from, string $email)
+    {
+        $transport = $this->transportBuilder->setTemplateIdentifier($templateId)
+            ->setTemplateOptions(['area' => 'frontend', 'store' => $quote->getStoreId()])
+            ->setTemplateVars($templateVars)
+            ->setFrom($from)
+            ->addTo($email)
+            ->getTransport();
+
+        $transport->sendMessage();
     }
 }

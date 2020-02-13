@@ -1,6 +1,5 @@
 <?php
 
-
 namespace BeeBots\AdminCustomerQuote\Controller\Adminhtml\Email;
 
 use BeeBots\AdminCustomerQuote\Model\QuoteSender;
@@ -9,6 +8,8 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Quote\Model\QuoteRepository;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * Class Index
@@ -26,6 +27,9 @@ class Index extends Action
     /** @var QuoteSender */
     private $quoteSender;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * Index constructor.
      *
@@ -33,17 +37,20 @@ class Index extends Action
      * @param QuoteRepository $quoteRepository
      * @param QuoteSender $quoteSender
      * @param Context $context
+     * @param LoggerInterface $logger
      */
     public function __construct(
         RawFactory $resultRawFactory,
         QuoteRepository $quoteRepository,
         QuoteSender $quoteSender,
-        Context $context
+        Context $context,
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
         $this->resultRawFactory = $resultRawFactory;
         $this->quoteRepository = $quoteRepository;
         $this->quoteSender = $quoteSender;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,12 +62,17 @@ class Index extends Action
      */
     public function execute()
     {
-        $request = $this->getRequest();
-        // get quote
-        $quote = $this->quoteRepository->get($request->getParam('quote_id'));
-        $this->quoteSender->send($quote);
+        try {
+            $request = $this->getRequest();
+            // get quote
+            $quote = $this->quoteRepository->get($request->getParam('quote_id'));
+            $this->quoteSender->send($quote);
 
-        // send quote
-        return $this->resultRawFactory->create()->setsetContents('');
+            // send quote
+            return $this->resultRawFactory->create()->setsetContents('');
+        } catch (Throwable $t) {
+            $this->logger->error($t->getMessage(), ['exception' => $t]);
+            return $this->resultRawFactory->create()->setHttpResponseCode(500)->setsetContents('');
+        }
     }
 }

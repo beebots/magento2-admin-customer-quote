@@ -1,7 +1,8 @@
 define([
     'jquery',
-    'BeeBots_AdminCustomerQuote/js/admin-order-common'
-], function ($, adminOrderCommon) {
+    'BeeBots_AdminCustomerQuote/js/admin-order-common',
+    'Magento_Ui/js/modal/alert',
+], function ($, adminOrderCommon, alert) {
     'use strict';
 
     return {
@@ -43,14 +44,12 @@ define([
         },
 
         onEmailSent: function () {
-            // TODO: show success message?
-            console.log('finished sending email');
+            $('#container').prepend('<div class="messages"><div class="message message-success success">Email sent!</div></div>');
             adminOrderCommon.stopLoader();
         },
 
         onEmailFail: function () {
-            // TODO: show error message?
-            console.log('error sending email');
+            alert({content:'Error sending email, try again. If it fails again, contact webteam.'});
             adminOrderCommon.stopLoader();
         },
 
