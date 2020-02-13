@@ -1,0 +1,7 @@
+<?php /** @var $block BeeBots\AdminCustomerQuote\Block\FixQuoteId */?>
+<script>
+    require(["BeeBots_AdminCustomerQuote/js/fix-quote-id"],
+        function(fixQuoteId){
+            fixQuoteId.init('<?= $block->getQuoteId()?>');
+        });
+</script>

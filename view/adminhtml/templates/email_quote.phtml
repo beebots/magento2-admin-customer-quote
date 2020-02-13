@@ -2,6 +2,6 @@
 <script>
     require(["BeeBots_AdminCustomerQuote/js/email-quote"],
         function(emailQuote){
-            emailQuote.init('<?= $block->getQuoteId()?>', '<?=$block->getEmailQuoteUrl()?>');
+            emailQuote.init('<?=$block->getEmailQuoteUrl()?>');
     });
 </script>

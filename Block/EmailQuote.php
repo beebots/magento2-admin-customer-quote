@@ -49,16 +49,6 @@ class EmailQuote extends Template
     }
 
     /**
-     * Function: getQuoteId
-     *
-     * @return int
-     */
-    public function getQuoteId()
-    {
-        return $this->quoteSession->getQuoteId();
-    }
-
-    /**
      * Function: getUrl
      *
      * @return mixed|string
