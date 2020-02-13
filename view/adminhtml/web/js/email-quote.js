@@ -33,7 +33,6 @@ define([
                 return;
             }
             adminOrderCommon.startLoader(); // something is turning off the loader in the middle, so start it again
-            debugger;
             return $.ajax({
                 url: url,
                 method: 'POST',

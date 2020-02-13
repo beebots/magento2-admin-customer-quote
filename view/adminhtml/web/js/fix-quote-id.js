@@ -5,7 +5,6 @@ define([
 
     return {
         init: function(quoteId){
-            debugger;
             window.order.quoteId = quoteId;
         }
     };
