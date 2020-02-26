@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="data">
-            <container name="additional_area">
-                <block class="BeeBots\AdminCustomerQuote\Block\FixQuoteId" name="fix-quote-id" template="BeeBots_AdminCustomerQuote::fix_quote.phtml"/>
-            </container>
+        <referenceBlock name="items">
+            <block class="BeeBots\AdminCustomerQuote\Block\FixQuoteId" name="fix-quote-id" template="BeeBots_AdminCustomerQuote::fix_quote.phtml"/>
         </referenceBlock>
     </body>
 </page>
