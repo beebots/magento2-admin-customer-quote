@@ -2,6 +2,7 @@
 
 namespace BeeBots\AdminCustomerQuote\Model;
 
+use BeeBots\AdminCustomerQuote\Model\QuoteSender\SendMail;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -10,7 +11,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\MailException;
 use Magento\Framework\Mail\Template\SenderResolverInterface;
-use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Quote\Model\Quote;
@@ -27,9 +27,6 @@ class QuoteSender
 {
     const EMAIL_TEMPLATE_CONFIG_PATH = 'quote_email/quote/template';
     const EMAIL_SENDER_CONFIG_PATH = 'quote_email/quote/email_identity';
-
-    /** @var TransportBuilder */
-    private $transportBuilder;
 
     /** @var LoggerInterface */
     private $logger;
@@ -49,33 +46,36 @@ class QuoteSender
     /** @var Data */
     private $paymentHelper;
 
+    /** @var SendMail */
+    private $sendMail;
+
     /**
      * QuoteSender constructor.
      *
      * @param LoggerInterface $logger
-     * @param TransportBuilder $transportBuilder
      * @param ScopeConfigInterface $scopeConfig
      * @param SenderResolverInterface $senderResolver
      * @param TimezoneInterface $timezone
      * @param Config $addressConfig
      * @param Data $paymentHelper
+     * @param SendMail $sendMail
      */
     public function __construct(
         LoggerInterface $logger,
-        TransportBuilder $transportBuilder,
         ScopeConfigInterface $scopeConfig,
         SenderResolverInterface $senderResolver,
         TimezoneInterface $timezone,
         Config $addressConfig,
-        Data $paymentHelper
+        Data $paymentHelper,
+        SendMail $sendMail
     ) {
         $this->logger = $logger;
-        $this->transportBuilder = $transportBuilder;
         $this->scopeConfig = $scopeConfig;
         $this->senderResolver = $senderResolver;
         $this->timezone = $timezone;
         $this->addressConfig = $addressConfig;
         $this->paymentHelper = $paymentHelper;
+        $this->sendMail = $sendMail;
     }
 
     /**
@@ -100,11 +100,11 @@ class QuoteSender
         $templateVars = $this->getTemplateVars($quote);
 
         // send email to customer
-        $this->sendEmail($templateId, $quote, $templateVars, $from, $email);
+        $this->sendMail->send($templateId, $quote, $templateVars, $from, $email);
 
         // send email to customer service
         if ($copyToEmail = $this->scopeConfig->getValue('sales_email/order/copy_to')) {
-            $this->sendEmail($templateId, $quote, $templateVars, $from, $copyToEmail);
+            $this->sendMail->sendCopyTo($templateId, $quote, $templateVars, $from, $copyToEmail);
         }
     }
 
@@ -202,29 +202,5 @@ class QuoteSender
             'quote_shipping_description' => $quote->getShippingAddress()->getShippingDescription(),
             'quote_payment_html' => $this->getPaymentHtml($quote),
         ];
-    }
-
-    /**
-     * Function: sendEmail
-     *
-     * @param string $templateId
-     * @param Quote $quote
-     * @param array $templateVars
-     * @param string $from
-     * @param string $email
-     *
-     * @throws LocalizedException
-     * @throws MailException
-     */
-    private function sendEmail(string $templateId, Quote $quote, array $templateVars, array $from, string $email)
-    {
-        $transport = $this->transportBuilder->setTemplateIdentifier($templateId)
-            ->setTemplateOptions(['area' => 'frontend', 'store' => $quote->getStoreId()])
-            ->setTemplateVars($templateVars)
-            ->setFrom($from)
-            ->addTo($email)
-            ->getTransport();
-
-        $transport->sendMessage();
     }
 }
