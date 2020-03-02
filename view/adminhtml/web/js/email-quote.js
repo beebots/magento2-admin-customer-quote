@@ -21,6 +21,7 @@ define([
         },
 
         onSendEmailClicked: function () {
+            $('#container .js-success').remove();
             adminOrderCommon.startLoader();
             let promise = adminOrderCommon.save();
             let afterSendQuoteEmailPromise = promise.pipe(this.sendQuoteEmail.bind(this, this.url));
@@ -44,7 +45,7 @@ define([
         },
 
         onEmailSent: function () {
-            $('#container').prepend('<div class="messages"><div class="message message-success success">Email sent!</div></div>');
+            $('#container').prepend('<div class="messages"><div class="message message-success success js-success">Email sent!</div></div>');
             adminOrderCommon.stopLoader();
         },
 

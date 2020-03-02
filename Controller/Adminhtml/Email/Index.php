@@ -69,10 +69,10 @@ class Index extends Action
             $this->quoteSender->send($quote);
 
             // send quote
-            return $this->resultRawFactory->create()->setsetContents('');
+            return $this->resultRawFactory->create()->setContents('');
         } catch (Throwable $t) {
             $this->logger->error($t->getMessage(), ['exception' => $t]);
-            return $this->resultRawFactory->create()->setHttpResponseCode(500)->setsetContents('');
+            return $this->resultRawFactory->create()->setHttpResponseCode(500)->setContents('');
         }
     }
 }
