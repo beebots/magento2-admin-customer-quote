@@ -24,7 +24,7 @@ define([
             $('#container .js-success').remove();
             adminOrderCommon.startLoader();
             let promise = adminOrderCommon.save();
-            let afterSendQuoteEmailPromise = promise.pipe(this.sendQuoteEmail.bind(this, this.url));
+            let afterSendQuoteEmailPromise = promise.then(this.sendQuoteEmail.bind(this, this.url));
             afterSendQuoteEmailPromise.done(this.onEmailSent);
             afterSendQuoteEmailPromise.fail(this.onEmailFail);
         },
