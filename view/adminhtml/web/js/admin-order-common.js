@@ -17,7 +17,16 @@ define([
 
         save: function () {
             let params = window.order.serializeData('edit_form');
-            return window.order.loadArea(false, false, params);
+            params.set('beePreCloseRequest', true);
+            params.set('json', true);
+            params.each(function(keyValue)
+            {
+                let key = keyValue.key;
+                if(key.indexOf('item[') === 0){
+                    params.unset(key);
+                }
+            });
+            return window.order.loadArea(['message'], true, params);
         },
     };
 });

@@ -24,11 +24,16 @@ define([
         onSaveAndClose: function() {
             adminOrderCommon.startLoader();
             let deferred = adminOrderCommon.save();
-            deferred.done(this.onSaveFinish.bind(this));
+            deferred.then(this.onSaveFinish.bind(this));
         },
 
         onSaveFinish: function () {
-            this.close();
+            adminOrderCommon.stopLoader();
+            if($('#order-message .message.message-error').length){
+                // don't close when there is an error while saving
+            } else {
+                this.close();
+            }
         },
 
         close: function () {

@@ -52,9 +52,6 @@ class SaveAndClose extends Template
             0,
             'toolbar'
         );
-        if (!$this->quoteSession->getCustomerId()) {
-            $this->buttonList->update('save_close', 'style', 'display:none');
-        }
         $this->createBlock = $createBlock;
         $this->urlHelper = $urlHelper;
     }

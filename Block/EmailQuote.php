@@ -43,9 +43,6 @@ class EmailQuote extends Template
             0,
             'toolbar'
         );
-        if (! $this->quoteSession->getCustomerId()) {
-            $this->buttonList->update('email_quote', 'style', 'display:none');
-        }
     }
 
     /**

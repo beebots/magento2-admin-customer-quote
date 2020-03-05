@@ -50,7 +50,7 @@ define([
         },
 
         onEmailFail: function () {
-            alert({content:'Error sending email, try again. If it fails again, contact webteam.'});
+            alert({content:'Error sending email, try again. If it fails again, contact support.'});
             adminOrderCommon.stopLoader();
         },
 
