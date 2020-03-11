@@ -22,7 +22,6 @@ define([
 
         onSendEmailClicked: function () {
             $('#container .js-success').remove();
-            adminOrderCommon.startLoader();
             let promise = adminOrderCommon.save();
             let afterSendQuoteEmailPromise = promise.then(this.sendQuoteEmail.bind(this, this.url));
             afterSendQuoteEmailPromise.done(this.onEmailSent);
