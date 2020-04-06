@@ -6,7 +6,6 @@ namespace BeeBots\AdminCustomerQuote\Plugin;
 
 use BeeBots\AdminCustomerQuote\Model\ResourceModel\CustomerQuoteResource;
 use Magento\Backend\Model\Session\Quote;
-use Magento\Customer\Model\ResourceModel\CustomerRepository;
 
 /**
  * Class GetPreviousQuoteIfAvailable
@@ -22,39 +21,32 @@ class GetPreviousQuoteIfAvailable
     private $quoteIdAlreadyInitialized = false;
 
     /**
-     * @var CustomerRepository
-     */
-    private $customerRepository;
-
-    /**
      * GetPreviousQuoteIfAvailable constructor.
      *
      * @param CustomerQuoteResource $customerQuoteResource
-     * @param CustomerRepository $customerRepository
      */
-    public function __construct(CustomerQuoteResource $customerQuoteResource, CustomerRepository $customerRepository)
+    public function __construct(CustomerQuoteResource $customerQuoteResource)
     {
         $this->customerQuoteResource = $customerQuoteResource;
-        $this->customerRepository = $customerRepository;
     }
 
     /**
      * Function: beforeGetQuote
      *
-     * @param Quote $quoteSession
+     * @param Quote $quote
      */
-    public function beforeGetQuote(Quote $quoteSession)
+    public function beforeGetQuote(Quote $quote)
     {
         if ($this->quoteIdAlreadyInitialized) {
             return;
         }
         $this->quoteIdAlreadyInitialized = true;
         // do not load previous quote if an order is being reordered
-        if ($this->isReorder($quoteSession)) {
+        if ($this->isReorder($quote)) {
             return;
         }
         // set latest quote id on session if customer and quote available
-        $customerId = $quoteSession->getCustomerId();
+        $customerId = $quote->getCustomerId();
         if (! $customerId) {
             return;
         }
@@ -62,12 +54,7 @@ class GetPreviousQuoteIfAvailable
         if (! $quoteId) {
             return;
         }
-        $quoteSession->setQuoteId($quoteId);
-        $customer = $this->customerRepository->getById($customerId);
-        $quote = $quoteSession->getQuote();
-        if ($customer->getGroupId() !== $quote->getCustomerGroupId()) {
-            $quote->setCustomerGroupId($customer->getGroupId());
-        }
+        $quote->setQuoteId($quoteId);
     }
 
     /**
