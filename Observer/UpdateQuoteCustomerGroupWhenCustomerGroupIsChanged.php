@@ -86,6 +86,7 @@ class UpdateQuoteCustomerGroupWhenCustomerGroupIsChanged implements ObserverInte
                         if ($customerQuote) {
                             $quote = $this->quoteRepository->get($customerQuote);
                             $quote->setCustomerGroupId($customer->getGroupId());
+                            $quote->setTriggerRecollect(1);
                             $quote->save();
                         }
                     }
