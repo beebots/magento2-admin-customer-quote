@@ -94,7 +94,7 @@ class QuoteSender
 
         /** @var array $from */
         $from = $this->senderResolver->resolve(
-            $this->scopeConfig->getValue(self::EMAIL_SENDER_CONFIG_PATH),
+            $this->scopeConfig->getValue(self::EMAIL_SENDER_CONFIG_PATH)
         );
 
         $templateVars = $this->getTemplateVars($quote);
