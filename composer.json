@@ -1,20 +1,13 @@
 {
     "name": "beebots/admincustomerquote",
-    "description": "",
+    "description": "Allows saving quotes in Magento 2 Admin",
     "require": {
-        "php": "~5.5.0|~5.6.0|~7.0.0",
-        
-        "magento/magento-composer-installer": "*",
+        "php": "^7.0",
         "magento/module-backend": ">=101.0.3"
-    },
-    "suggest": {
-
     },
     "type": "magento2-module",
     "version": "0.1.0",
-    "license": [
-
-    ],
+    "license": "MIT",
     "autoload": {
         "files": [
             "registration.php"
@@ -22,13 +15,5 @@
         "psr-4": {
             "BeeBots\\AdminCustomerQuote\\": ""
         }
-    },
-    "extra": {
-        "map": [
-            [
-                "*",
-                "BeeBots/AdminCustomerQuote"
-            ]
-        ]
     }
 }
