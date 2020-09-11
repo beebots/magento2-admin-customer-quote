@@ -3,7 +3,7 @@ This module allows you to save customer quotes while working in the magento admi
 
 ## Installation
 ```
-composer require beebots/admincustomerquote
+composer require beebots/magento2-admin-customer-quote
 ```
 
 ## License
