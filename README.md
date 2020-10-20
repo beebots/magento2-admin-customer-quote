@@ -7,4 +7,4 @@ composer require beebots/magento2-admin-customer-quote
 ```
 
 ## License
-[MIT](LICENSE.md)
+[MIT](LICENSE.txt)
