@@ -2,11 +2,11 @@
     "name": "beebots/magento2-admin-customer-quote",
     "description": "Allows saving quotes in Magento 2 Admin",
     "require": {
-        "php": "^7.0",
-        "magento/module-backend": ">=101.0.3"
+        "php": "^7.0 || ^8.1",
+        "magento/module-backend": "102.0.*"
     },
     "type": "magento2-module",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "license": "MIT",
     "autoload": {
         "files": [
