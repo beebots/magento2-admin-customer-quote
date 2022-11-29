@@ -3,7 +3,7 @@
 <!--    <update handle="sales_email_quote_renderers"/>-->
 <!--    <update handle="sales_email_quote_item_price"/>-->
     <body>
-        <block class="Magento\Sales\Block\Order\Email\Items" name="items" template="BeeBots_AdminCustomerQuote::email/items.phtml" cacheable="false">
+        <block class="BeeBots\AdminCustomerQuote\Block\Quote\Email\Items" name="items" template="BeeBots_AdminCustomerQuote::email/items.phtml" cacheable="false">
             <block class="Magento\Framework\View\Element\RendererList" name="sales.email.quote.renderers" as="renderer.list">
                 <!-- quote renderers (from sales_email_order_renderers handle) -->
                 <!--<block class="Magento\Bundle\Block\Sales\Order\Items\Renderer" name="sales.email.order.renderers.bundle" as="bundle" template="Magento_Bundle::email/order/items/order/default.phtml"/>

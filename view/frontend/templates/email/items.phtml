@@ -1,16 +1,11 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 
-// phpcs:disable Magento2.Templates.ThisInTemplate
-
-/** @var $block \Magento\Sales\Block\Order\Email\Items */
+use BeeBots\AdminCustomerQuote\Block\Quote\Email\Items;
+/** @var $block Items */
 ?>
-<?php $_order = $block->getOrder() ?>
-<?php if ($_order) : ?>
-    <?php $_items = $_order->getAllItems(); ?>
+<?php $_quote = $block->getQuote() ?>
+<?php if ($_quote) : ?>
+    <?php $_items = $_quote->getAllItems(); ?>
     <table class="email-items">
         <thead>
             <tr>

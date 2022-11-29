@@ -191,7 +191,7 @@ class QuoteSender
     private function getTemplateVars(Quote $quote)
     {
         return [
-            'quote' => $quote,
+            'quote_id' => $quote->getId(),
             'quote_updated_at' => $this->getFormattedDateFromDateTimeString($quote->getUpdatedAt()),
             'quote_comment' => $this->getCustomerNote($quote),
             'quote_show_shipping_address' => ! $quote->getIsVirtual(),
